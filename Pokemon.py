@@ -6,13 +6,15 @@ class Pokemon:
         self.hp = 100
         self.skill_dict = {'몸통 박치기': 5, '울음소리': 5, '전광석화': 10}
 
-    def attack(self, target, skill_name, skill_level):
-        print(f'{self.name}이(가) {skill_name}(으)로 {target.name}을(를) 공격했다!')
+    def attack(self, target, skill_name, skill_level, position):
+        print(f'{position}의 {self.name}이(가) {skill_name}(으)로 {position}의 {target.name}을(를) 공격했다!')
         target.hp -= skill_level
-        print(f'{target.name}의 체력이 {target.hp}로 하락했다!')
+        if target.hp <= 0:
+            target.hp = 0
+        print(f'{position}의 {target.name}의 체력이 {target.hp}로 하락했다!')
 
     def run(self, target):
-        print(f'{self.name}이(가) {target.name}와(과)의 대결에서 도망쳤다!')
+        print(f'{self.name}이(가) 야생의 {target.name}과(와)의 대결에서 도망쳤다!')
 
     def get_name(self):
         return self.name
@@ -22,6 +24,9 @@ class Pokemon:
 
     def get_hp(self):
         return self.hp
+
+    def set_hp(self, hp):
+        self.hp = hp
 
 
 class Pikachu(Pokemon):
@@ -105,7 +110,7 @@ class Game:
         if select == '2':
             self.mine.run(nemesis)
         elif select == '1':
-            print(f'!! {self.user}님의 {self.mine.get_name()} vs 야생의 {nemesis.get_name()} !!')
+            print(f'!! {self.user}님의 {self.mine.get_name()} vs 야생의 {nemesis.get_name()} !!\n')
             while True:
                 if self.mine.get_hp() <= 0:
                     print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
@@ -123,22 +128,45 @@ class Game:
                     select = int(input("/ 공격을 고르세요 : "))
                     if 0 < select <= len(skill_names):
                         my_skill = skill_names[select - 1]
-                        self.mine.attack(nemesis, my_skill, self.mine.skill_dict[my_skill])
+                        self.mine.attack(nemesis, my_skill, self.mine.skill_dict[my_skill], self.user)
 
                     if nemesis.get_hp() <= 0:
-                        print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 승리했다!')
+                        print(f'\n야생의 {nemesis.get_name()}과(와)의 대결에서 승리했다!')
                         break
 
                     print()
                     # 야생 포켓몬의 공격
 
                     nemesis_skill = random.choice(list(nemesis.skill_dict.keys()))
-                    nemesis.attack(self.mine, nemesis_skill, nemesis.skill_dict[nemesis_skill])
+                    nemesis.attack(self.mine, nemesis_skill, nemesis.skill_dict[nemesis_skill], "야생")
                     if self.mine.get_hp() <= 0:
-                        print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
+                        print(f'\n야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
                         break
+                    print()
+        return
 
+    def menu(self):
+        while True:
+            select = input("\n* 시작 메뉴 * \n1) 탐험하기 \n2) 체력 충전하기 \n3) 게임 종료하기 \n")
+            if select == '1':
+                happen = random.randint(0, 2)
+                if happen == 0:
+                    print("아무것도 발견하지 못했습니다.")
+                elif happen == 1:
+                    self.fight()
+            elif select == '2':
+                if self.mine.get_hp() == 100:
+                    print("체력이 최대치입니다!")
+                else:
+                    before = self.mine.get_hp()
+                    self.mine.set_hp(100)
+                    print(f'{self.mine.get_name()}의 체력이 {before}에서 100으로 회복되었습니다!')
+            elif select == '3':
+                print("포켓몬스터 게임을 종료하겠습니다.")
+                return
+            else:
+                print("1 ~ 3번 메뉴 중에서 골라주세요!")
 
 
 game = Game()
-game.fight()
+game.menu()
