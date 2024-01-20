@@ -91,6 +91,7 @@ class Bulbasaur(Pokemon):
         self.charmander_skill_dict = {'덩굴채찍': 25, '앞날가르기': 35, '씨폭탄': 55}
         self.skill_dict.update(self.charmander_skill_dict)
 
+
 class Game:
     def __init__(self):
         self.pokemon_list = ['피카츄', '파이리', '꼬부기', '이상해씨']
@@ -137,7 +138,6 @@ class Game:
 
         return self.user_pokemon
 
-
     def fight(self):
         num = random.randint(0, 3)
         if num == 0:
@@ -150,52 +150,56 @@ class Game:
             nemesis = Bulbasaur()
 
         print(f'야생의 {nemesis.get_name()}이(가) 나타났다!')
-        select = input("1) 싸우기  2) 도망가기 : ")
-        if select == '2':
-            self.mine.run(nemesis, self.user)
-        elif select == '1':
-            print(f'!! {self.user}님의 {self.mine.get_name()} vs 야생의 {nemesis.get_name()} !!\n')
-            while True:
-                if self.mine.get_hp() <= 0:
-                    print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
-                    break
-                elif nemesis.get_hp() <= 0:
-                    print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 승리했다!')
-                    self.mine.set_xp(10)
-                    print(f'{self.user}의 {self.mine.get_name()}의 경험치가 {self.mine.get_xp()}로 올랐습니다!')
-                    if self.mine.get_xp() == 100:
-                        self.mine.evolve()
-                    break
-                else:
-                    # user 포켓몬의 공격
-                    i = 1
-                    skill_names = list(self.mine.skill_dict.keys())
-                    for skill_name in skill_names:
-                        print(f'{i}) {skill_name}', end='  ')
-                        i += 1
-                    select = int(input("/ 공격을 고르세요 : "))
-                    if 0 < select <= len(skill_names):
-                        my_skill = skill_names[select - 1]
-                        self.mine.attack(nemesis, my_skill, self.mine.skill_dict[my_skill], self.user, "야생")
-
-                    if nemesis.get_hp() <= 0:
-                        print(f'\n야생의 {nemesis.get_name()}과(와)의 대결에서 승리했다!')
+        while True:
+            select = input("1) 싸우기  2) 도망가기 : ")
+            if select == '2':
+                self.mine.run(nemesis, self.user)
+                break
+            elif select == '1':
+                print(f'!! {self.user}님의 {self.mine.get_name()} vs 야생의 {nemesis.get_name()} !!\n')
+                while True:
+                    if self.mine.get_hp() <= 0:
+                        print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
+                        break
+                    elif nemesis.get_hp() <= 0:
+                        print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 승리했다!')
                         self.mine.set_xp(10)
                         print(f'{self.user}의 {self.mine.get_name()}의 경험치가 {self.mine.get_xp()}로 올랐습니다!')
                         if self.mine.get_xp() == 100:
                             self.mine.evolve()
                         break
+                    else:
+                        # user 포켓몬의 공격
+                        i = 1
+                        skill_names = list(self.mine.skill_dict.keys())
+                        for skill_name in skill_names:
+                            print(f'{i}) {skill_name}', end='  ')
+                            i += 1
+                        select = int(input("/ 공격을 고르세요 : "))
+                        if 0 < select <= len(skill_names):
+                            my_skill = skill_names[select - 1]
+                            self.mine.attack(nemesis, my_skill, self.mine.skill_dict[my_skill], self.user, "야생")
 
-                    print()
-                    # 야생 포켓몬의 공격
+                        if nemesis.get_hp() <= 0:
+                            print(f'\n야생의 {nemesis.get_name()}과(와)의 대결에서 승리했다!')
+                            self.mine.set_xp(10)
+                            print(f'{self.user}의 {self.mine.get_name()}의 경험치가 {self.mine.get_xp()}로 올랐습니다!')
+                            if self.mine.get_xp() == 100:
+                                self.mine.evolve()
+                            break
 
-                    nemesis_skill = random.choice(list(nemesis.skill_dict.keys()))
-                    nemesis.attack(self.mine, nemesis_skill, nemesis.skill_dict[nemesis_skill], "야생",self.user)
-                    if self.mine.get_hp() <= 0:
-                        print(f'\n야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
-                        break
-                    print()
-        return
+                        print()
+                        # 야생 포켓몬의 공격
+
+                        nemesis_skill = random.choice(list(nemesis.skill_dict.keys()))
+                        nemesis.attack(self.mine, nemesis_skill, nemesis.skill_dict[nemesis_skill], "야생",self.user)
+                        if self.mine.get_hp() <= 0:
+                            print(f'\n야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
+                            break
+                        print()
+                break
+            else:
+                print("1 ~ 2번 중에서 골라주세요!")
 
     def menu(self):
         while True:
