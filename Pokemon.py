@@ -1,3 +1,4 @@
+import random
 class Pokemon:
     def __init__(self, name, type):
         self.name = name
@@ -11,7 +12,7 @@ class Pokemon:
         print(f'{target.name}의 체력이 {target.hp}로 하락했다!')
 
     def run(self, target):
-        print(f'{self.name}이(가) {target.name}과의 대결에서 도망쳤다!')
+        print(f'{self.name}이(가) {target.name}와(과)의 대결에서 도망쳤다!')
 
     def get_name(self):
         return self.name
@@ -54,43 +55,90 @@ class Bulbasaur(Pokemon):
 class Game:
     def __init__(self):
         self.pokemon_list = ['피카츄', '파이리', '꼬부기', '이상해씨']
+        nemesis_pika = Pikachu()
+        nemesis_char = Charmander()
+        nemesis_squir = Squirtle()
+        nemesis_bul = Bulbasaur()
+        self.nemesis_list = [nemesis_pika, nemesis_char, nemesis_squir, nemesis_bul]
+        self.mine = self.start()
 
     def start(self):
         print("포켓몬스터 게임을 시작합니다!")
-        user = input("당신의 이름은? : ")
-        print(f"{user}님의 스타팅 포켓몬을 선택해주세요.")
+        self.user = input("당신의 이름은? : ")
+        print(f"{self.user}님의 스타팅 포켓몬을 선택해주세요.")
+
         i = 1
-        while i <= len(self.pokemon_list):
-            print(f'{i}) {self.pokemon_list[i-1]}')
+        for pokemon in self.pokemon_list:
+            print(f'{i}) {pokemon}')
             i += 1
 
         while True:
-            num = input(f"{user}님의 스타팅 포켓몬(1 ~ 4번) : ")
+            select = input(f"{self.user}님의 스타팅 포켓몬(1 ~ 4번) : ")
 
-            if num == '1':  # 피카츄
-                user_pokemon = Pikachu()
-                print(f"{user_pokemon.get_type()} 속성의 {user_pokemon.get_name()}를 선택하셨습니다!")
+            if select == '1':  # 피카츄
+                self.user_pokemon = Pikachu()
+                print(f"{self.user_pokemon.get_type()} 속성의 {self.user_pokemon.get_name()}를 선택하셨습니다!")
                 break
-            elif num == '2':  # 파이리
-                user_pokemon = Charmander()
-                print(f"{user_pokemon.get_type()} 속성의 {user_pokemon.get_name()}를 선택하셨습니다!")
+            elif select == '2':  # 파이리
+                self.user_pokemon = Charmander()
+                print(f"{self.user_pokemon.get_type()} 속성의 {self.user_pokemon.get_name()}를 선택하셨습니다!")
                 break
-            elif num == '3':  # 꼬부기
-                user_pokemon = Squirtle()
-                print(f"{user_pokemon.get_type()} 속성의 {user_pokemon.get_name()}를 선택하셨습니다!")
+            elif select == '3':  # 꼬부기
+                self.user_pokemon = Squirtle()
+                print(f"{self.user_pokemon.get_type()} 속성의 {self.user_pokemon.get_name()}를 선택하셨습니다!")
                 break
-            elif num == '4':  # 이상해씨
-                user_pokemon = Bulbasaur()
-                print(f"{user_pokemon.get_type()} 속성의 {user_pokemon.get_name()}를 선택하셨습니다!")
+            elif select == '4':  # 이상해씨
+                self.user_pokemon = Bulbasaur()
+                print(f"{self.user_pokemon.get_type()} 속성의 {self.user_pokemon.get_name()}를 선택하셨습니다!")
                 break
             else:
                 print("1 ~ 4번 중에서 골라주세요!")
 
         # while
 
-        return user_pokemon
+        return self.user_pokemon
+
+    def fight(self):
+        nemesis = random.choice(self.nemesis_list)
+        print(f'야생의 {nemesis.get_name()}이(가) 나타났다!')
+        select = input("1) 싸우기  2) 도망가기 : ")
+        if select == '2':
+            self.mine.run(nemesis)
+        elif select == '1':
+            print(f'!! {self.user}님의 {self.mine.get_name()} vs 야생의 {nemesis.get_name()} !!')
+            while True:
+                if self.mine.get_hp() <= 0:
+                    print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
+                    break
+                elif nemesis.get_hp() <= 0:
+                    print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 승리했다!')
+                    break
+                else:
+                    # user 포켓몬의 공격
+                    i = 1
+                    skill_names = list(self.mine.skill_dict.keys())
+                    for skill_name in skill_names:
+                        print(f'{i}) {skill_name}', end='  ')
+                        i += 1
+                    select = int(input("/ 공격을 고르세요 : "))
+                    if 0 < select <= len(skill_names):
+                        my_skill = skill_names[select - 1]
+                        self.mine.attack(nemesis, my_skill, self.mine.skill_dict[my_skill])
+
+                    if nemesis.get_hp() <= 0:
+                        print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 승리했다!')
+                        break
+
+                    print()
+                    # 야생 포켓몬의 공격
+
+                    nemesis_skill = random.choice(list(nemesis.skill_dict.keys()))
+                    nemesis.attack(self.mine, nemesis_skill, nemesis.skill_dict[nemesis_skill])
+                    if self.mine.get_hp() <= 0:
+                        print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
+                        break
+
 
 
 game = Game()
-game.start()
-
+game.fight()
