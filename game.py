@@ -53,9 +53,9 @@ class Game:
             nemesis = pc.Pikachu()
         elif num == 1:
             nemesis = pc.Charmander()
-        elif num ==2:
+        elif num == 2:
             nemesis = pc.Squirtle()
-        elif num ==3:
+        elif num == 3:
             nemesis = pc.Bulbasaur()
 
         print(f'야생의 {nemesis.get_name()}이(가) 나타났다!')
@@ -126,12 +126,12 @@ class Game:
 
     def menu(self):
         while True:
-            select = input("\n* 게임 메뉴 * \n1) 탐험하기 \n2) 체력 충전하기 \n3) 게임 종료하기 \n")
+            select = input("\n* 게임 메뉴 * \n1) 탐험하기 \n2) 체력 충전하기 \n3) 보유 능력 \n4) 게임 종료하기 \n")
             if select == '1':
-                happen = random.randint(0, 1)
-                if happen == 0:
-                    print("아무것도 발견하지 못했습니다.")
-                elif happen == 1:
+                # happen = random.randint(0, 1)
+                # if happen == 0:
+                #     print("아무것도 발견하지 못했습니다.")
+                # elif happen == 1:
                     self.fight()
             elif select == '2':
                 if self.mine.get_hp() == 100:
@@ -141,6 +141,8 @@ class Game:
                     self.mine.set_hp(100)
                     print(f'{self.mine.get_name()}의 체력이 {before}에서 100으로 회복되었습니다!')
             elif select == '3':
+                self.mine.inventory()
+            elif select == '4':
                 print("포켓몬스터 게임을 종료하겠습니다.")
                 return
             else:

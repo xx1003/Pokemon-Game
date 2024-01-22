@@ -1,10 +1,15 @@
+import addskill
+
 class Pokemon:
+    hp = 100
+    xp = 0
+    fly_skill = addskill.Nofly()
+    # swim = addskill.Noswim()
+    skill_dict = {'몸통 박치기': 5, '울음소리': 5, '전광석화': 10}
+
     def __init__(self, name, type):
         self.name = name
         self.type = type
-        self.hp = 100
-        self.xp = 0
-        self.skill_dict = {'몸통 박치기': 5, '울음소리': 5, '전광석화': 10}
 
     def attack(self, target, skill_name, skill_level, position, target_position):
         print(f'{position}의 {self.name}이(가) {skill_name}(으)로 {target_position}의 {target.name}을(를) 공격했다!')
@@ -20,6 +25,17 @@ class Pokemon:
         print(f'{self.name}이(가) {new_name}으로 진화했다!')
         self.name = new_name
         print(f'{self.name}의 특수공격의 위력이 5씩 증가했다!\n')
+        self.fly_skill = addskill.FlyingSkill()
+        self.fly_skill.fly(self.name)
+
+    def inventory(self):
+        print(f"<< {self.name}의 보유 공격 >>")
+        for key in self.skill_dict.keys():
+            print(f'공격 : {key}   위력 : {self.skill_dict[key]}')
+
+        print(f"<< {self.name}의 특수 능력 >>")
+        if self.fly_skill == addskill.FlyingSkill():
+            print(f'플라잉 능력')
 
     def get_name(self):
         return self.name
