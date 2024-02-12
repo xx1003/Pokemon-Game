@@ -3,13 +3,15 @@ import addskill
 class Pokemon:
     hp = 100
     xp = 0
-    fly_skill = addskill.Nofly()
+
     # swim = addskill.Noswim()
-    skill_dict = {'몸통 박치기': 5, '울음소리': 5, '전광석화': 10}
 
     def __init__(self, name, type):
         self.name = name
         self.type = type
+        self.skill_dict = {'몸통 박치기': 5, '울음소리': 5, '전광석화': 10}
+        self.can_fly = False
+        self.fly_skill = addskill.Nofly()
 
     def attack(self, target, skill_name, skill_level, position, target_position):
         print(f'{position}의 {self.name}이(가) {skill_name}(으)로 {target_position}의 {target.name}을(를) 공격했다!')
@@ -26,16 +28,19 @@ class Pokemon:
         self.name = new_name
         print(f'{self.name}의 특수공격의 위력이 5씩 증가했다!\n')
         self.fly_skill = addskill.FlyingSkill()
+        self.can_fly = True
         self.fly_skill.fly(self.name)
 
     def inventory(self):
         print(f"<< {self.name}의 보유 공격 >>")
         for key in self.skill_dict.keys():
             print(f'공격 : {key}   위력 : {self.skill_dict[key]}')
-
+        print()
         print(f"<< {self.name}의 특수 능력 >>")
-        if self.fly_skill == addskill.FlyingSkill():
+        if self.can_fly:
             print(f'플라잉 능력')
+        else:
+            print('없음')
 
     def get_name(self):
         return self.name
@@ -58,6 +63,7 @@ class Pokemon:
     def add_xp(self, xp):
         self.xp += xp
 
+
 class Pikachu(Pokemon):
     def __init__(self):
         super().__init__('피카츄', '전기')
@@ -69,6 +75,7 @@ class Pikachu(Pokemon):
         super().evolve(self.evolve_name)
         self.pikachu_skill_dict = {'전기쇼크': 25, '10만 볼트': 35, '번개': 55}
         self.skill_dict.update(self.pikachu_skill_dict)
+
 
 class Squirtle(Pokemon):
     def __init__(self):
@@ -99,12 +106,12 @@ class Charmander(Pokemon):
 class Bulbasaur(Pokemon):
     def __init__(self):
         super().__init__('이상해씨', '풀')
-        self.charmander_skill_dict = {'덩굴채찍': 20, '앞날가르기': 30, '씨폭탄': 50}
-        self.skill_dict.update(self.charmander_skill_dict)
+        self.bulbasaur_skill_dict = {'덩굴채찍': 20, '앞날가르기': 30, '씨폭탄': 50}
+        self.skill_dict.update(self.bulbasaur_skill_dict)
         self.evolve_name = '이상해풀'
 
     def evolve(self):
         super().evolve(self.evolve_name)
-        self.charmander_skill_dict = {'덩굴채찍': 25, '앞날가르기': 35, '씨폭탄': 55}
-        self.skill_dict.update(self.charmander_skill_dict)
+        self.bulbasaur_skill_dict = {'덩굴채찍': 25, '앞날가르기': 35, '씨폭탄': 55}
+        self.skill_dict.update(self.bulbasaur_skill_dict)
 

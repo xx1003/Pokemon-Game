@@ -70,7 +70,8 @@ class Game:
                     if self.mine.get_hp() <= 0:
                         print(f'야생의 {nemesis.get_name()}과(와)의 대결에서 패배했다!')
                         self.mine.add_xp(-5)
-                        if self.mine.get_xp() <= 0: self.mine.set_xp(0)
+                        if self.mine.get_xp() <= 0:
+                            self.mine.set_xp(0)
                         print(f'{self.user}의 {self.mine.get_name()}의 경험치가 {self.mine.get_xp()}로 떨어졌습니다.')
                         break
                     elif nemesis.get_hp() <= 0:
